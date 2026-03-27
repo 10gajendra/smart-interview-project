@@ -1,0 +1,46 @@
+:root {
+  --bg: #f5f7fb;
+  --bg-soft: #eaf2ff;
+  --surface: rgba(255, 255, 255, 0.82);
+  --surface-strong: #ffffff;
+  --border: rgba(148, 163, 184, 0.24);
+  --text: #0f172a;
+  --text-muted: #475569;
+  --brand: #0f766e;
+  --brand-soft: #14b8a6;
+  --brand-accent: #2563eb;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background:
+    radial-gradient(circle at top left, rgba(45, 212, 191, 0.16), transparent 30%),
+    radial-gradient(circle at top right, rgba(96, 165, 250, 0.14), transparent 28%),
+    linear-gradient(180deg, #f8fbff 0%, #eef5ff 100%);
+  color: var(--text);
+}
+#root {
+  min-height: 100vh;
+}
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #edf2fb; }
+::-webkit-scrollbar-thumb { background: #14b8a6; border-radius: 3px; }
+
+.grid-two {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+.grid-three {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+}
+
+@media (max-width: 820px) {
+  nav {
+    padding: 0 1rem !important;
+  }
+}

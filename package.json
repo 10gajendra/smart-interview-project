@@ -1,0 +1,13 @@
+{
+  "scripts": {
+    "dev": "./scripts/dev.sh",
+    "dev:with-db": "./scripts/dev-with-db.sh",
+    "dev:backend": "cd backend && node server.js",
+    "dev:frontend": "cd frontend && npm start"
+  },
+  "dependencies": {
+    "axios": "^1.13.6",
+    "react-router-dom": "^7.13.2",
+    "recharts": "^3.8.0"
+  }
+}
