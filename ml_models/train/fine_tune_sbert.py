@@ -34,7 +34,7 @@ class TrainConfig:
     tensorboard_dir: Path = Path("runs/sbert_training")
     loss_log_csv: Path = Path("training_losses.csv")
     batch_size: int = 64
-    epochs: int = 10
+    epochs: int = 65
     warmup_steps: int = 100
     log_every_steps: int = 100
     random_seed: int = 42

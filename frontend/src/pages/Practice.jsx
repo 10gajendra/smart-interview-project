@@ -82,6 +82,7 @@ export default function Practice() {
   const [questionNotice, setQuestionNotice] = useState("");
   const [status, setStatus] = useState({ loading: true, submitting: false, error: "" });
   const user = getStoredUser();
+  const isLoggedIn = Boolean(user?.id);
   const requestedQuestionCount = parseRequestedQuestionCount(questionCount);
 
   const microphoneButtonStyle = {
@@ -119,6 +120,13 @@ export default function Practice() {
 
   useEffect(() => {
     async function loadQuestions() {
+      if (!isLoggedIn) {
+        resetPracticeSession();
+        setQuestionNotice("");
+        setStatus((current) => ({ ...current, loading: false, error: "" }));
+        return;
+      }
+
       if (!selectedCategory) {
         resetPracticeSession();
         setQuestionNotice("");
@@ -183,7 +191,7 @@ export default function Practice() {
     }
 
     loadQuestions();
-  }, [selectedCategory, questionCount, categories]);
+  }, [selectedCategory, questionCount, categories, isLoggedIn]);
 
   useEffect(() => {
     activeQuestionIdRef.current = activeQuestionId;
@@ -739,9 +747,9 @@ export default function Practice() {
             </label>
           </div>
 
-          {!user ? (
+          {!isLoggedIn ? (
             <div style={{ marginTop: "1.25rem", color: "#fbbf24", lineHeight: 1.6 }}>
-              You need an account before submitting answers.{" "}
+              You need an account before questions and answers are shown.{" "}
               <Link to="/login" style={{ color: "#5eead4" }}>Log in here</Link>.
             </div>
           ) : (
@@ -797,7 +805,9 @@ export default function Practice() {
         }}>
           <div style={{ color: "#cbd5e1", fontSize: "0.95rem" }}>Voice And Recording Helper</div>
           <h2 style={{ marginTop: "0.75rem", lineHeight: 1.4 }}>
-            {currentQuestion?.prompt || (
+            {!isLoggedIn
+              ? "Log in to unlock practice questions"
+              : currentQuestion?.prompt || (
               requestedQuestionCount === null
                 ? "Questions will appear after you enter a number of questions"
                 : requestedQuestionCount === 0
@@ -807,7 +817,9 @@ export default function Practice() {
           </h2>
 
           <div style={{ marginTop: "1rem", color: "#94a3b8", fontSize: "0.95rem" }}>
-            {currentQuestion
+            {!isLoggedIn
+              ? "Sign in to load questions and start answering."
+              : currentQuestion
               ? `Question ${sessionProgress} of ${questions.length} in ${selectedDomainLabel}`
               : requestedQuestionCount === null
                 ? `Enter the number of questions for ${selectedDomainLabel}`
@@ -820,7 +832,7 @@ export default function Practice() {
             <button
               type="button"
               onClick={() => handleSpeechToggle()}
-              disabled={!speechSupported || !currentQuestion}
+              disabled={!isLoggedIn || !speechSupported || !currentQuestion}
               style={{
                 padding: "0.8rem 1rem",
                 borderRadius: 12,
@@ -828,13 +840,15 @@ export default function Practice() {
                 background: isListening ? "rgba(248,113,113,0.12)" : "rgba(94,234,212,0.08)",
                 color: isListening ? "#fca5a5" : "#5eead4",
                 fontWeight: 700,
-                cursor: speechSupported && currentQuestion ? "pointer" : "not-allowed"
+                cursor: isLoggedIn && speechSupported && currentQuestion ? "pointer" : "not-allowed"
               }}
             >
               {isListening ? "Stop Voice Input" : "Start Voice Input"}
             </button>
             <div style={{ color: "#94a3b8", fontSize: "0.9rem" }}>
-              {speechSupported
+              {!isLoggedIn
+                ? "Log in to answer questions with typing or speech-to-text."
+                : speechSupported
                 ? speechMode === "recognition"
                   ? "Use your microphone to dictate into the current answer box."
                   : "Record your answer, then it will be transcribed into the current answer box."
@@ -976,7 +990,9 @@ export default function Practice() {
             border: "1px solid rgba(255,255,255,0.08)",
             color: "#cbd5e1"
           }}>
-            {requestedQuestionCount === null
+            {!isLoggedIn
+              ? "Log in to view practice questions and write answers."
+              : requestedQuestionCount === null
               ? "No question is shown until you enter the number of questions."
               : requestedQuestionCount === 0
               ? "No question is shown because the selected number of questions is 0."
